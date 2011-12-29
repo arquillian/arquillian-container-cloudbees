@@ -1,0 +1,7 @@
+Arquillian Container for Cloudbees
+
+For the moment, it is hardcoded : no configuration except ~/.cloudbees/cloudbees-api.properties.
+CDI is working on my example.
+JAX-RS as-client is working on my example.
+The EJB enricher does not work because the JNDI names in Cloudbees are not compliant with Arquillian's lookup.
+
