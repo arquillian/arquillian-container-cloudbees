@@ -11,7 +11,7 @@ Configuration example :
     </container>
 API URL, key and secret are in ~/.cloudbees/cloudbees-api.properties.
 
-CDI is working on my example.
+CDI is working when deployed in a jar file. Not in a war or ear.
 
 JAX-RS as-client is working on my example.
 
@@ -23,3 +23,9 @@ It does not work with a simple @EJB
     Greeter greeter;
 The EJB enricher does not work because the JNDI names in Cloudbees are not compliant with Arquillian's lookup.
 
+EAR deployment is not supported yet.
+
+
+Restrictions
+============
+Multiple @Deployment per test class does not work because only one archive is really deployed in an application.

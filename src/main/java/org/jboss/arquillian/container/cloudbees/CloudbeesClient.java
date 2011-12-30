@@ -38,7 +38,10 @@ public class CloudbeesClient {
     void deployWar(String appId, String description, String archivePath, String containerType) throws DeploymentException {
         deployArchive(appId, description, archivePath, ArchiveType.WAR, containerType);
     }
-    
+    void deployEar(String appId, String description, String archivePath, String containerType) throws DeploymentException {
+        deployArchive(appId, description, archivePath, ArchiveType.EAR, containerType);
+    }
+
     private void deployArchive(String appId, String description, String archivePath, ArchiveType archiveType, String containerType) throws DeploymentException {
         try {
             Map<String, String> parameters = new HashMap<String, String>();
@@ -50,11 +53,11 @@ public class CloudbeesClient {
         }
     }
 
-    void delete(String appId) throws LifecycleException {
+    void delete(String appId) throws DeploymentException {
         try {
-            client.applicationDelete(appId);
+//            client.applicationDelete(appId);
         } catch (Exception ex) {
-            throw new LifecycleException("Cannot delete app " + appId, ex);
+            throw new DeploymentException("Cannot delete app " + appId, ex);
         }
     }
     boolean isExisting(String appId) throws LifecycleException {

@@ -21,6 +21,8 @@ import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.core.spi.ServiceLoader;
 import org.jboss.arquillian.protocol.servlet.ServletMethodExecutor;
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.descriptor.api.Descriptor;
 
 /**
@@ -66,8 +68,6 @@ public class CloudbeesContainer implements DeployableContainer<CloudbeesConfigur
     @Override
     public void stop() throws LifecycleException {
         log.info("Stop");
-        CloudbeesConfiguration conf = configuration.get();
-        cloudbees.delete(conf.getAppId());
     }
 
     @Override
@@ -82,26 +82,42 @@ public class CloudbeesContainer implements DeployableContainer<CloudbeesConfigur
 
     @Override
     public ProtocolMetaData deploy(Archive<?> archive) throws DeploymentException {
-        log.info("Deploy archive");
+        log.info("Deploy archive of type " + archive.getClass().getSimpleName());
         Validate.notNull(archive, "Archive must not be null");
         CloudbeesConfiguration conf = configuration.get();
 
         String appId = conf.getAppId();
         String archivePath = ShrinkWrapUtil.toURL(archive).getPath();
-        cloudbees.deployWar(appId, "Test war from Arquillian", archivePath, conf.getContainerType());
+        if (archive instanceof WebArchive) {
+            cloudbees.deployWar(appId, "Test war from Arquillian", archivePath, conf.getContainerType());
+            return buildWarMetadata(conf);
+        } else if (archive instanceof EnterpriseArchive) {
+            cloudbees.deployEar(appId, "Test ear from Arquillian", archivePath, conf.getContainerType());
+            return buildEarMetadata(conf);
+        } else {
+            throw new UnsupportedOperationException("undeploy with descriptor not implemented");            
+        }
 
-        return buildMetadata(conf);
     }
 
     @Override
     public void undeploy(Archive<?> archive) throws DeploymentException {
         log.info("Undeploy archive");
+        CloudbeesConfiguration conf = configuration.get();
+        cloudbees.delete(conf.getAppId());
     }
 
-    private ProtocolMetaData buildMetadata(CloudbeesConfiguration conf) {
+    private ProtocolMetaData buildWarMetadata(CloudbeesConfiguration conf) {
         ProtocolMetaData metaData = new ProtocolMetaData();
         HTTPContext context = new HTTPContext(conf.getHostName(), 80);
         context.add(new Servlet(ServletMethodExecutor.ARQUILLIAN_SERVLET_NAME, ""));
+        metaData.addContext(context);
+        return metaData;
+    }
+    private ProtocolMetaData buildEarMetadata(CloudbeesConfiguration conf) {
+        ProtocolMetaData metaData = new ProtocolMetaData();
+        HTTPContext context = new HTTPContext(conf.getHostName(), 80);
+        context.add(new Servlet(ServletMethodExecutor.ARQUILLIAN_SERVLET_NAME, "test"));
         metaData.addContext(context);
         return metaData;
     }
