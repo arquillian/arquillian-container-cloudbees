@@ -10,24 +10,39 @@ import org.jboss.arquillian.container.spi.client.container.ContainerConfiguratio
  */
 public class CloudbeesConfiguration implements ContainerConfiguration {
 
+    private String account = "sewatech";
+    private String application = "arq-test";
+    private String containerType = "jboss";
+    
     public void validate() throws ConfigurationException {
         
     }
 
-    String getHostName() {
-        return "test.sewatech.cloudbees.net";
+    String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
     }
     
-    String getAccount() {
-        return "sewatech";
-    }
     String getApplication() {
-        return "arq-test";
+        return application;
     }
+
+    public void setApplication(String application) {
+        this.application = application;
+    }
+    
+    String getContainerType() {
+        return containerType;
+    }
+    
     String getAppId() {
         return getAccount() + "/" +getApplication();
     }
-    String getContainerType() {
-        return "jboss";
+    String getHostName() {
+        return getApplication() + "." + getAccount() + ".cloudbees.net";
     }
+    
 }

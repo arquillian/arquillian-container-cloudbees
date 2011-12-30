@@ -1,7 +1,25 @@
 Arquillian Container for Cloudbees
+==================================
 
-For the moment, it is hardcoded : no configuration except ~/.cloudbees/cloudbees-api.properties.
+Configuration example :
+    <container qualifier="cloudbees" default="true">
+        <configuration>
+            <property name="account">sewatech</property>
+            <property name="application">arqtest</property>
+            <property name="containerType">jboss</property>
+        </configuration>
+    </container>
+API URL, key and secret are in ~/.cloudbees/cloudbees-api.properties.
+
 CDI is working on my example.
+
 JAX-RS as-client is working on my example.
+
+EJB is working only when specifying beanName in @EJB :
+    @EJB(beanName="Greeter")
+    Greeter greeter;
+It does not work with a simple @EJB
+    @EJB
+    Greeter greeter;
 The EJB enricher does not work because the JNDI names in Cloudbees are not compliant with Arquillian's lookup.
 
