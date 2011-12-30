@@ -38,6 +38,8 @@ public class CloudbeesContainer implements DeployableContainer<CloudbeesConfigur
     private InstanceProducer<CloudbeesConfiguration> configuration;
     @Inject
     private Instance<ServiceLoader> serviceLoader;
+    
+    private CloudbeesClient cloudbees;
 
     @Override
     public ProtocolDescription getDefaultProtocol() {
@@ -57,6 +59,8 @@ public class CloudbeesContainer implements DeployableContainer<CloudbeesConfigur
     @Override
     public void start() throws LifecycleException {
         log.info("Start");
+        CloudbeesConfiguration conf = configuration.get();
+        cloudbees = new CloudbeesClient();
     }
 
     @Override
@@ -83,29 +87,22 @@ public class CloudbeesContainer implements DeployableContainer<CloudbeesConfigur
         CloudbeesConfiguration conf = configuration.get();
 
         String appId = conf.getAppId();
-
         String archivePath = ShrinkWrapUtil.toURL(archive).getPath();
-        BeesClient client = CloudbeesClientBuilder.build();
+        cloudbees.deployWar(appId, "Test war from Arquillian", archivePath, conf.getContainerType());
 
-        Map<String, String> parameters = new HashMap<String, String>();
-        parameters.put("containerType", conf.getContainerType());
-        try {
-            ApplicationDeployArchiveResponse deployResponse = client.applicationDeployArchive(appId, null, "Test war from Arquillian", archivePath, null, "war", true, parameters, null);
-        } catch (Exception ex) {
-            throw new DeploymentException("Cannot deploy", ex);
-        }
-
-        ProtocolMetaData metaData = new ProtocolMetaData();
-        HTTPContext context = new HTTPContext(conf.getHostName(), 80);
-        context.add(new Servlet(ServletMethodExecutor.ARQUILLIAN_SERVLET_NAME, ""));
-        metaData.addContext(context);
-
-        return metaData;
+        return buildMetadata(conf);
     }
 
     @Override
     public void undeploy(Archive<?> archive) throws DeploymentException {
         log.info("Undeploy archive");
-        CloudbeesConfiguration conf = configuration.get();
+    }
+
+    private ProtocolMetaData buildMetadata(CloudbeesConfiguration conf) {
+        ProtocolMetaData metaData = new ProtocolMetaData();
+        HTTPContext context = new HTTPContext(conf.getHostName(), 80);
+        context.add(new Servlet(ServletMethodExecutor.ARQUILLIAN_SERVLET_NAME, ""));
+        metaData.addContext(context);
+        return metaData;
     }
 }
