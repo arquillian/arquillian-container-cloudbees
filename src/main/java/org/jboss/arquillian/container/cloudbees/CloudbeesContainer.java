@@ -62,6 +62,8 @@ public class CloudbeesContainer implements DeployableContainer<CloudbeesConfigur
     @Override
     public void stop() throws LifecycleException {
         log.info("Stop");
+        CloudbeesConfiguration conf = configuration.get();
+        cloudbees.delete(conf.getAppId());
     }
 
     @Override
