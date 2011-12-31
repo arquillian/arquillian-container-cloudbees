@@ -3,9 +3,14 @@
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              version="6" 
              xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/application_6.xsd">
-  <application-name>test-app</application-name>
+    <application-name>test-app</application-name>
 
-  <module>
-    <ejb>test.jar</ejb>
-  </module>
+    <module>
+        <ejb>test-ejb.jar</ejb>
+    </module>
+
+    <module>
+        <web>test-web.war</web>
+        <context-root>web</context-root>
+    </module>
 </application>

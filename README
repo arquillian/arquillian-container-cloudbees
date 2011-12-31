@@ -24,7 +24,7 @@ It does not work with a simple @EJB
 The EJB enricher does not work because the JNDI names in Cloudbees are not compliant with Arquillian's lookup.
 
 EAR deployment is not supported yet.
-
+Servlet URL injection is not supported yet.
 
 Restrictions
 ============

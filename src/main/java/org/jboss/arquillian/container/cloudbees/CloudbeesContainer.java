@@ -1,9 +1,5 @@
 package org.jboss.arquillian.container.cloudbees;
 
-import com.cloudbees.api.ApplicationDeployArchiveResponse;
-import com.cloudbees.api.BeesClient;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Logger;
 
 import org.jboss.arquillian.container.spi.client.container.DeployableContainer;
@@ -37,7 +33,7 @@ public class CloudbeesContainer implements DeployableContainer<CloudbeesConfigur
 
     private static final Logger log = Logger.getLogger(CloudbeesContainer.class.getName());
     @Inject @ContainerScoped
-    private InstanceProducer<CloudbeesConfiguration> configuration;
+    private InstanceProducer<CloudbeesConfiguration> configurationProducer;
     @Inject
     private Instance<ServiceLoader> serviceLoader;
     
@@ -55,14 +51,14 @@ public class CloudbeesContainer implements DeployableContainer<CloudbeesConfigur
 
     @Override
     public void setup(CloudbeesConfiguration configuration) {
-        this.configuration.set(configuration);
+        this.configurationProducer.set(configuration);
     }
 
     @Override
     public void start() throws LifecycleException {
         log.info("Start");
-        CloudbeesConfiguration conf = configuration.get();
-        cloudbees = new CloudbeesClient();
+        CloudbeesConfiguration configuration = configurationProducer.get();
+        cloudbees = new CloudbeesClient(configuration);
     }
 
     @Override
@@ -84,16 +80,16 @@ public class CloudbeesContainer implements DeployableContainer<CloudbeesConfigur
     public ProtocolMetaData deploy(Archive<?> archive) throws DeploymentException {
         log.info("Deploy archive of type " + archive.getClass().getSimpleName());
         Validate.notNull(archive, "Archive must not be null");
-        CloudbeesConfiguration conf = configuration.get();
+        CloudbeesConfiguration configuration = configurationProducer.get();
 
-        String appId = conf.getAppId();
+        String appId = configuration.getAppId();
         String archivePath = ShrinkWrapUtil.toURL(archive).getPath();
         if (archive instanceof WebArchive) {
-            cloudbees.deployWar(appId, "Test war from Arquillian", archivePath, conf.getContainerType());
-            return buildWarMetadata(conf);
+            cloudbees.deployWar(appId, "Test war from Arquillian", archivePath, configuration.getContainerType());
+            return buildWarMetadata(configuration);
         } else if (archive instanceof EnterpriseArchive) {
-            cloudbees.deployEar(appId, "Test ear from Arquillian", archivePath, conf.getContainerType());
-            return buildEarMetadata(conf);
+            cloudbees.deployEar(appId, "Test ear from Arquillian", archivePath, configuration.getContainerType());
+            return buildEarMetadata(configuration);
         } else {
             throw new UnsupportedOperationException("undeploy with descriptor not implemented");            
         }
@@ -103,8 +99,8 @@ public class CloudbeesContainer implements DeployableContainer<CloudbeesConfigur
     @Override
     public void undeploy(Archive<?> archive) throws DeploymentException {
         log.info("Undeploy archive");
-        CloudbeesConfiguration conf = configuration.get();
-        cloudbees.delete(conf.getAppId());
+        CloudbeesConfiguration configuration = configurationProducer.get();
+        cloudbees.delete(configuration.getAppId());
     }
 
     private ProtocolMetaData buildWarMetadata(CloudbeesConfiguration conf) {
@@ -117,7 +113,7 @@ public class CloudbeesContainer implements DeployableContainer<CloudbeesConfigur
     private ProtocolMetaData buildEarMetadata(CloudbeesConfiguration conf) {
         ProtocolMetaData metaData = new ProtocolMetaData();
         HTTPContext context = new HTTPContext(conf.getHostName(), 80);
-        context.add(new Servlet(ServletMethodExecutor.ARQUILLIAN_SERVLET_NAME, "test"));
+        context.add(new Servlet(ServletMethodExecutor.ARQUILLIAN_SERVLET_NAME, "test.war"));
         metaData.addContext(context);
         return metaData;
     }

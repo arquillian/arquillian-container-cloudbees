@@ -18,17 +18,18 @@ import org.jboss.arquillian.container.spi.client.container.LifecycleException;
  */
 public class CloudbeesClient {
 
+    
     private BeesClient client;
 
-    CloudbeesClient() {
+    CloudbeesClient(CloudbeesConfiguration configuration) {
         try {
             Properties properties = new Properties();
-            properties.load(new FileReader(System.getProperty("user.home") + "/.cloudbees/cloudbees-api.properties"));
+            properties.load(new FileReader(configuration.getPropertiesFile()));
 
-            client = new BeesClient(properties.getProperty("url"),
-                    properties.getProperty("key"),
-                    properties.getProperty("secret"),
-                    "xml", "1.0");
+            client = new BeesClient(configuration.getApiUrl(),
+                                    properties.getProperty("key"),
+                                    properties.getProperty("secret"),
+                                    "xml", "1.0");
             client.setVerbose(false);
         } catch (IOException ex) {
             throw new RuntimeException("Fichier properties non trouvé", ex);
