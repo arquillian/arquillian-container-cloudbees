@@ -10,7 +10,6 @@ import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.Ignore;
 import org.junit.runner.RunWith;
 
 /**
@@ -24,13 +23,14 @@ public class CloudbeesCdiWarTest {
     public static Archive<?> deploy() {
         return ShrinkWrap.create(WebArchive.class)
                          .addClasses(EchoService.class)
-                         .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+  //                       .addAsWebInfResource("web.xml")
+                         .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
     @Inject
     EchoService bean;
         
-    @Test @Ignore // FAILS
+    @Test
     public void shouldBeanBeInjected() {
         assertNotNull("Bean has not bean injected", bean);
         String message = "azerty";
