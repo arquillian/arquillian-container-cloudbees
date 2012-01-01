@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates and open the template in
- * the editor.
- */
 package org.jboss.arquillian.container.cloudbees;
 
 import javax.ejb.EJB;
@@ -20,8 +16,10 @@ import org.junit.Ignore;
 import org.junit.runner.RunWith;
 
 /**
- *
- * @author alexis
+ * This test has been disabled because ear deployment is not supported at this time
+ * see <a href="https://github.com/hasalex/arquillian-container-cloudbees/issues/1">issue #1</a>
+ * 
+ * @author <a href="mailto:alexis@sewatech.org">Alexis Hassler</a>
  */
 @RunWith(Arquillian.class)
 public class CloudbeesEjbEarTestFail {
@@ -42,12 +40,12 @@ public class CloudbeesEjbEarTestFail {
     @EJB(beanName="EchoService")
     EchoService namedBean;
     
-    @Test @Ignore // It fails :-(
+    @Test
     public void shouldEjbBeInjected() {
         assertNotNull("Anonymous bean has not bean injected", bean);
     }
 
-    @Test @Ignore // It fails too :-(
+    @Test
     public void shouldNamedEjbBeInjected() {
         assertNotNull("Named bean has not bean injected", namedBean);
     }

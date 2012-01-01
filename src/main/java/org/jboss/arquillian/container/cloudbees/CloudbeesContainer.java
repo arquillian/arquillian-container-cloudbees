@@ -80,6 +80,10 @@ public class CloudbeesContainer implements DeployableContainer<CloudbeesConfigur
     public ProtocolMetaData deploy(Archive<?> archive) throws DeploymentException {
         log.info("Deploy archive of type " + archive.getClass().getSimpleName());
         Validate.notNull(archive, "Archive must not be null");
+        if (archive instanceof EnterpriseArchive) {
+            throw new IllegalArgumentException("Enterprise Archive is not supported for the Cloudbees container");
+        }
+        
         CloudbeesConfiguration configuration = configurationProducer.get();
 
         String appId = configuration.getAppId();
