@@ -56,7 +56,7 @@ public class CloudbeesClient {
 
     void delete(String appId) throws DeploymentException {
         try {
-//            client.applicationDelete(appId);
+            client.applicationDelete(appId);
         } catch (Exception ex) {
             throw new DeploymentException("Cannot delete app " + appId, ex);
         }

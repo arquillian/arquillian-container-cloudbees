@@ -14,7 +14,7 @@ import org.junit.runner.RunWith;
 
 /**
  *
- * @author alexis
+ * @author <a href="mailto:alexis@sewatech.org">Alexis Hassler</a>
  */
 @RunWith(Arquillian.class)
 public class CloudbeesCdiJarTest {
