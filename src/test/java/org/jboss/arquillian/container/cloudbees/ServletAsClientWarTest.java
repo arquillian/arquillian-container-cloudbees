@@ -10,6 +10,7 @@ import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import static  org.junit.Assert.*;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -27,7 +28,7 @@ public class ServletAsClientWarTest {
         assertNotNull("Root URL has not been injected", baseURL);
     }
 
-    @Test @RunAsClient
+    @Test @RunAsClient @Ignore
     public void shouldServletBeInjected(@ArquillianResource(Servlet1.class) URL servletURL) throws Exception {
         assertNotNull("Servlet URL has not been injected", servletURL);
     }
