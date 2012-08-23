@@ -23,7 +23,7 @@
     <properties>
 
         <!-- Versioning -->
-        <version.arquillian_core>1.0.0.Final-SNAPSHOT</version.arquillian_core>
+        <version.arquillian_core>1.0.0.Final</version.arquillian_core>
         <version.ejb3_api>3.1.0</version.ejb3_api>
         <version.arquillian_ajocado>1.0.0.CR1</version.arquillian_ajocado>
         <version.jgit>1.0.0.201106090707-r</version.jgit>
@@ -134,4 +134,19 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <repositories>
+        <repository>
+            <id>jboss-public-repository</id>
+            <name>JBoss Repository</name>
+            <url>http://repository.jboss.org/nexus/content/groups/public</url>
+            <releases>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+            <snapshots>
+                <!-- temporary until we get to Arquillian 1.0.0.Final -->
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 </project>
