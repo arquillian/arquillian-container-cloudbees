@@ -1,6 +1,8 @@
 package org.jboss.arquillian.container.cloudbees;
 
 import com.cloudbees.api.*;
+
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
@@ -48,7 +50,7 @@ public class CloudbeesClient {
             Map<String, String> parameters = new HashMap<String, String>();
             parameters.put("containerType", containerType);
             boolean deltaUpload = true;
-            client.applicationDeployArchive(appId, null, description, archivePath, null, archiveType.toString(), deltaUpload, parameters, null);
+            client.applicationDeployArchive(appId, null, description, new File(archivePath), null, archiveType.toString(), deltaUpload, parameters, null);
         } catch (Exception ex) {
             throw new DeploymentException("Cannot deploy app " + appId, ex);
         }
