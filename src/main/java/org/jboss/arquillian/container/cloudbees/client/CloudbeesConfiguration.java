@@ -1,4 +1,4 @@
-package org.jboss.arquillian.container.cloudbees;
+package org.jboss.arquillian.container.cloudbees.client;
 
 import org.jboss.arquillian.container.spi.ConfigurationException;
 import org.jboss.arquillian.container.spi.client.container.ContainerConfiguration;

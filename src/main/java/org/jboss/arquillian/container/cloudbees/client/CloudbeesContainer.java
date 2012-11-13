@@ -1,4 +1,4 @@
-package org.jboss.arquillian.container.cloudbees;
+package org.jboss.arquillian.container.cloudbees.client;
 
 import java.util.logging.Logger;
 

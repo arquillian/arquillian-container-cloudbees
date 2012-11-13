@@ -35,7 +35,7 @@ public class CloudbeesEjbWarTest {
     @EJB(beanName="EchoService")
     EchoService namedBean;
     
-    @Test @Ignore // It fails :-(
+    @Test
     public void shouldEjbBeInjected() {
         assertNotNull("Anonymous bean has not bean injected", bean);
     }
